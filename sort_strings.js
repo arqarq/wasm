@@ -1,5 +1,5 @@
-const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = []
-let i, j, k, t1, t2, c1, c2, tabL = 50
+const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
+let i, j, k, t1, t2, c1, c2, start, tabL = 15000
 
 function createUUID() {
   return template.replace(/[xy]/g, replacer)
@@ -17,6 +17,8 @@ for (i = 0; i < tabL; i++) {
 tabL--
 table[tabL] = '00000000-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 table[0] = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+table2.push(...table)
+start = new Date()
 for (j = 0; j < tabL; j++) {
   for (i = 0; i < tabL; i++) {
     t1 = table[i]
@@ -35,4 +37,7 @@ for (j = 0; j < tabL; j++) {
     }
   }
 }
-console.log(table)
+console.log(new Date() - start)
+start = new Date()
+table2.sort()
+console.log(new Date() - start)
