@@ -1,5 +1,5 @@
 const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
-let i, j, k, t1, t2, c1, c2, start, tabL = 15000
+let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, tabL = 15
 
 function createUUID() {
   return template.replace(/[xy]/g, replacer)
@@ -20,6 +20,7 @@ table[0] = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 table2.push(...table)
 start = new Date()
 for (j = 0; j < tabL; j++) {
+  noFlip = true
   for (i = 0; i < tabL; i++) {
     t1 = table[i]
     t2 = table[i + 1]
@@ -32,12 +33,17 @@ for (j = 0; j < tabL; j++) {
       if (c1 - c2 > 0) {
         table[i + 1] = t1
         table[i] = t2
+        noFlip = false
       }
       break
     }
+    c++
+  }
+  if (noFlip) {
+    break
   }
 }
-console.log(new Date() - start)
+console.log(new Date() - start, c)
 start = new Date()
 table2.sort()
 console.log(new Date() - start)
