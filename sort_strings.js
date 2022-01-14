@@ -1,5 +1,5 @@
 const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
-let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, tabL = 15
+let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, cMax, tabL = 20000
 
 function createUUID() {
   return template.replace(/[xy]/g, replacer)
@@ -15,9 +15,13 @@ for (i = 0; i < tabL; i++) {
   table.push(createUUID())
 }
 tabL--
-table[tabL] = '00000000-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-table[0] = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+cMax = tabL * tabL
+// table[tabL] = '00000000-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+// table[0] = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 table2.push(...table)
+start = new Date()
+table2.sort()
+console.log(1, 'time [ms]:', new Date() - start)
 start = new Date()
 for (j = 0; j < tabL; j++) {
   noFlip = true
@@ -43,7 +47,4 @@ for (j = 0; j < tabL; j++) {
     break
   }
 }
-console.log(new Date() - start, c)
-start = new Date()
-table2.sort()
-console.log(new Date() - start)
+console.log(2, 'time [ms]:', new Date() - start, 'iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
