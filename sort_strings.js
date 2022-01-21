@@ -48,3 +48,10 @@ for (j = 0; j < tabL; j++) {
   }
 }
 console.log(2, 'time [ms]:', new Date() - start, 'iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
+const fs = require('fs')
+const buffer = fs.readFileSync('add.wasm')
+start = new Date()
+WebAssembly.instantiate(buffer, {}).then(obj => { // fetch('add.wasm')
+  const exports = obj.instance.exports
+  console.log(3, 'time [ms]:', new Date() - start, 'result:', exports.square(exports.add(1, 2)))
+})
