@@ -1,3 +1,5 @@
+const wasmTools = require('./wasm_tools')
+
 const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
 let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, cMax, tabL = 20000
 
@@ -48,10 +50,5 @@ for (j = 0; j < tabL; j++) {
   }
 }
 console.log(2, 'time [ms]:', new Date() - start, 'iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
-const fs = require('fs')
-const buffer = fs.readFileSync('add.wasm')
 start = new Date()
-WebAssembly.instantiate(buffer, {}).then(obj => { // fetch('add.wasm')
-  const exports = obj.instance.exports
-  console.log(3, 'time [ms]:', new Date() - start, 'result:', exports.square(exports.add(1, 2)))
-})
+wasmTools.parseWat('add.wat').then(e => console.log(3, 'time [ms]:', new Date() - start, 'result:', e.square(e.add(1, 2))))
