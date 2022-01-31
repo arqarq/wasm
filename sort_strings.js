@@ -1,3 +1,4 @@
+const {performance} = require('perf_hooks')
 const wasmTools = require('./wasm_tools')
 
 const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
@@ -13,6 +14,10 @@ function replacer(c) {
   return r.toString(16)
 }
 
+function showOpTime() {
+  return +(performance.now() - start).toFixed(3)
+}
+
 for (i = 0; i < tabL; i++) {
   table.push(createUUID())
 }
@@ -21,10 +26,10 @@ cMax = tabL * tabL
 // table[tabL] = '00000000-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 // table[0] = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 table2.push(...table)
-start = new Date()
+start = performance.now()
 table2.sort()
-console.log(1, 'time [ms]:', new Date() - start)
-start = new Date()
+console.log(1, 'time:', showOpTime(), '[ms]')
+start = performance.now()
 for (j = 0; j < tabL; j++) {
   noFlip = true
   for (i = 0; i < tabL; i++) {
@@ -49,6 +54,6 @@ for (j = 0; j < tabL; j++) {
     break
   }
 }
-console.log(2, 'time [ms]:', new Date() - start, 'iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
-start = new Date()
-wasmTools.parseWat('add.wat').then(e => console.log(3, 'time [ms]:', new Date() - start, 'result:', e.square(e.add(1, 2))))
+console.log(2, 'time:', showOpTime(), '[ms] iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
+start = performance.now()
+wasmTools.parseWat('add.wat').then(e => console.log(3, 'time:', showOpTime(), '[ms] result:', e.square(e.add(1, 2)), e.squareSquarePlus(10, 1)))
