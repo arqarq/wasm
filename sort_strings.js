@@ -55,6 +55,10 @@ for (j = 0; j < tabL; j++) {
   }
 }
 console.log(2, 'time:', showOpTime(), '[ms] iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
+const promise = wasmTools.parseWat('add.wat')
 start = performance.now()
-wasmTools.parseWat('add.wat').then(e =>
-  console.log(3, 'time:', showOpTime(), '[ms] result:', e.square(e.add(1, 2)), e.squareSquarePlus(10, 1)))
+promise.then(e => {
+  const square = e.square(e.add(1, 2))
+  const squareSquarePlus = e.squareSquarePlus(10, 1)
+  console.log(3, 'time:', showOpTime(), '[ms] result:', square, squareSquarePlus)
+})
