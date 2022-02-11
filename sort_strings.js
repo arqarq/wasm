@@ -56,4 +56,5 @@ for (j = 0; j < tabL; j++) {
 }
 console.log(2, 'time:', showOpTime(), '[ms] iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
 start = performance.now()
-wasmTools.parseWat('add.wat').then(e => console.log(3, 'time:', showOpTime(), '[ms] result:', e.square(e.add(1, 2)), e.squareSquarePlus(10, 1)))
+wasmTools.parseWat('add.wat').then(e =>
+  console.log(3, 'time:', showOpTime(), '[ms] result:', e.square(e.add(1, 2)), e.squareSquarePlus(10, 1)))
