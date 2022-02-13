@@ -55,10 +55,22 @@ for (j = 0; j < tabL; j++) {
   }
 }
 console.log(2, 'time:', showOpTime(), '[ms] iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
-const promise = wasmTools.parseWat('add.wat')
+const global = new WebAssembly.Global({value: 'i32', mutable: true}, 4)
+const promise = wasmTools.parseWat('add.wat', {
+  console: {
+    log: function (a) {
+      console.log(a)
+    }
+  }, js: {
+    global
+  }
+})
 start = performance.now()
 promise.then(e => {
-  const square = e.square(e.add(1, 2))
-  const squareSquarePlus = e.squareSquarePlus(10, 1)
-  console.log(3, 'time:', showOpTime(), '[ms] result:', square, squareSquarePlus)
+  const {add, square, squareSquarePlus, logIt, setGlobal1, getGlobal1, incGlobal1, setGlobal} = e
+
+  console.log(3, 'time:', showOpTime(), '[ms] result:', square(add(1, 2)), squareSquarePlus(10, 1))
+  logIt()
+  console.log(getGlobal1(), setGlobal1(), getGlobal1(), incGlobal1(), getGlobal1())
+  console.log(global.value, setGlobal(), global.valueOf())
 })
