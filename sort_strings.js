@@ -2,7 +2,7 @@ const {performance} = require('perf_hooks')
 const wasmTools = require('./wasm_tools')
 
 const template = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', tmplL = template.length, table = [], table2 = []
-let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, cMax, tabL = 20000
+let i, j, k, t1, t2, c1, c2, start, noFlip, c = 0, cMax, tabL = 200
 
 function createUUID() {
   return template.replace(/[xy]/g, replacer)
@@ -55,22 +55,46 @@ for (j = 0; j < tabL; j++) {
   }
 }
 console.log(2, 'time:', showOpTime(), '[ms] iterations:', c, `iterations less than max (${cMax}):`, cMax - c)
+
 const global = new WebAssembly.Global({value: 'i32', mutable: true}, 4)
+const mem = new WebAssembly.Memory({initial: 2})
+
 const promise = wasmTools.parseWat('add.wat', {
   console: {
     log: function (a) {
       console.log(a)
+    }, consoleLogString: function (offset, length) {
+      const bytes = new Uint8Array(mem.buffer, offset, length)
+      console.log(new TextDecoder('utf-8').decode(bytes))
     }
-  }, js: {
-    global
-  }
+  }, js: {global, mem}
 })
 start = performance.now()
 promise.then(e => {
-  const {add, square, squareSquarePlus, logIt, setGlobal1, getGlobal1, incGlobal1, setGlobal} = e
+  const {
+    add,
+    square,
+    squareSquarePlus,
+    logIt,
+    setGlobal1,
+    getGlobal1,
+    incGlobal1,
+    setGlobal,
+    getGlobal,
+    writeSth,
+    memory,
+    callByIndex
+  } = e
 
   console.log(3, 'time:', showOpTime(), '[ms] result:', square(add(1, 2)), squareSquarePlus(10, 1))
   logIt()
   console.log(getGlobal1(), setGlobal1(), getGlobal1(), incGlobal1(), getGlobal1())
   console.log(global.value, setGlobal(), global.valueOf())
+  global.value = 6
+  console.log(getGlobal())
+  writeSth()
+  const dataView = new DataView(memory.buffer, 0, 10)
+  console.log(dataView.getInt8(0), dataView.getInt8(1), memory.buffer.byteLength)
+  console.log(callByIndex(1, 55, 66))
+  console.log(callByIndex(0, 55))
 })
