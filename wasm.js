@@ -1,6 +1,5 @@
 const wT = require('./wasm_tools')
 
-let start
 const global = new WebAssembly.Global({value: 'i32', mutable: true}, 4)
 const mem = new WebAssembly.Memory({initial: 2})
 const table = new WebAssembly.Table({initial: 1, element: 'anyfunc'})
@@ -32,7 +31,7 @@ promise.then(e => {
     callByIndex
   } = e
 
-  console.log('_time:', wT.showOpTime(start), '[ms] result:', square(add(1, 2)), squareSquarePlus(10, 1))
+  console.log('_time:', wT.showOpTime(), '[ms] result:', square(add(1, 2)), squareSquarePlus(10, 1))
   logIt()
   console.log(getGlobal1(), setGlobal1(), getGlobal1(), incGlobal1(), getGlobal1())
   console.log(global.value, setGlobal(), global.valueOf())
